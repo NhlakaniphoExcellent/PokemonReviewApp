@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using PokemonReviewApp.Models;
+using PokemonReviewApp.DataContext;
 
 #nullable disable
 
@@ -67,11 +67,15 @@ namespace PokemonReviewApp.Migrations
                     b.Property<int>("CountryId")
                         .HasColumnType("int");
 
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Gym")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -84,52 +88,36 @@ namespace PokemonReviewApp.Migrations
 
             modelBuilder.Entity("PokemonReviewApp.Models.PokemonCategory", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("PokemonID")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CategoryID")
                         .HasColumnType("int");
 
-                    b.Property<int>("PokemonID")
+                    b.Property<int>("Id")
                         .HasColumnType("int");
 
-                    b.Property<int>("PokemonsID")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("PokemonID", "CategoryID");
 
                     b.HasIndex("CategoryID");
-
-                    b.HasIndex("PokemonsID");
 
                     b.ToTable("PokemonCategories");
                 });
 
             modelBuilder.Entity("PokemonReviewApp.Models.PokemonOwner", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("PokemonId")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("OwnerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PokemonId")
+                    b.Property<int>("Id")
                         .HasColumnType("int");
 
-                    b.Property<int>("PokemonsID")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("PokemonId", "OwnerId");
 
                     b.HasIndex("OwnerId");
-
-                    b.HasIndex("PokemonsID");
 
                     b.ToTable("PokemonOwners");
                 });
@@ -142,7 +130,7 @@ namespace PokemonReviewApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<DateTime>("Birth")
+                    b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
@@ -167,6 +155,9 @@ namespace PokemonReviewApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("PokemonID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rating")
                         .HasColumnType("int");
 
                     b.Property<int>("ReviewerId")
@@ -231,7 +222,7 @@ namespace PokemonReviewApp.Migrations
 
                     b.HasOne("PokemonReviewApp.Models.Pokemons", "Pokemons")
                         .WithMany("PokemonCategories")
-                        .HasForeignKey("PokemonsID")
+                        .HasForeignKey("PokemonID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -250,7 +241,7 @@ namespace PokemonReviewApp.Migrations
 
                     b.HasOne("PokemonReviewApp.Models.Pokemons", "Pokemons")
                         .WithMany("PokemonOwners")
-                        .HasForeignKey("PokemonsID")
+                        .HasForeignKey("PokemonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
